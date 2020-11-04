@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebChat</title>
+    <style>
+        div#logs, #chatarea {
+            display: flex;
+            flex-flow: column nowrap; 
+            width: 250px; 
+        }
+
+        #chatarea>*{
+            margin: 5px;
+        }
+
+        div#logs {
+            height: auto;
+            width: 200px;
+            border: 2px black solid;
+        }
+
+        div#logs>span {
+            display: block;
+            width: 100%;
+            border: 1px black solid;
+        }
+
+        body {
+            display: flex;
+            flex-flow: row nowrap;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="chatarea">
+        <input type="text" id="pseudo" placeholder="Your name">
+        <textarea name="text" id="text" cols="30" rows="10">Hello World !!!</textarea>
+        <button id="send">send</button>    
+    </div>
+    <div id="logs"></div>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        let socket = io();
+
+        var chat = {
+            pseudo: document.getElementById('pseudo'),
+            textarea: document.getElementById('text'),
+            button: document.getElementById('send')
+        }
+
+        chat.button.addEventListener("click", () => {
+            if(chat.textarea.value !== "" && chat.pseudo.value !== ""){
+                socket.emit('new message', {
+                    from: chat.pseudo.value,
+                    content: chat.textarea.value
+                });
+                chat.textarea.value = ""; 
+            }
+        });
+
+        socket.on("log", (log) => {
+            var span = document.createElement("span");
+            span.appendChild(document.createTextNode(`[${log['from']}]: ${log['content']}`));
+            var el = document.getElementById("logs");
+            el.appendChild(span);
+        });
+
+    </script>
+</body>
+
+</html>
