@@ -4,35 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebChat</title>
-    <style>
-        div#logs, #chatarea {
-            display: flex;
-            flex-flow: column nowrap; 
-            width: 250px; 
-        }
-
-        #chatarea>*{
-            margin: 5px;
-        }
-
-        div#logs {
-            height: auto;
-            width: auto;
-            border: 2px black solid;
-        }
-
-        div#logs>span {
-            display: block;
-            width: 100%;
-            border: 1px black solid;
-        }
-
-        body {
-            display: flex;
-            flex-flow: row nowrap;
-        }
-
-    </style>
+    <link rel="stylesheet" href="/style/style.css">
 </head>
 <body>
     <div id="chatarea">
@@ -43,34 +15,7 @@
     <div id="logs"></div>
     
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-        let socket = io();
-
-        var chat = {
-            pseudo: document.getElementById('pseudo'),
-            textarea: document.getElementById('text'),
-            button: document.getElementById('send')
-        }
-
-        chat.button.addEventListener("click", () => {
-            if(chat.textarea.value !== "" && chat.pseudo.value !== ""){
-                socket.emit('new message', {
-                    from: chat.pseudo.value,
-                    content: chat.textarea.value,
-                    date: "none"
-                });
-                chat.textarea.value = ""; 
-            }
-        });
-
-        socket.on("log", (log) => {
-            var span = document.createElement("span");
-            span.appendChild(document.createTextNode(`[${log['from']}](${log['date']}): ${log['content']}`));
-            var el = document.getElementById("logs");
-            el.appendChild(span);
-        });
-
-    </script>
+    <script src="/scripts/ws_script.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,26 @@
+div#logs, #chatarea {
+    display: flex;
+    flex-flow: column nowrap; 
+    width: 250px; 
+}
+
+#chatarea>*{
+    margin: 5px;
+}
+
+div#logs {
+    height: auto;
+    width: auto;
+    border: 2px black solid;
+}
+
+div#logs>span {
+    display: block;
+    width: 100%;
+    border: 1px black solid;
+}
+
+body {
+    display: flex;
+    flex-flow: row nowrap;
+}
