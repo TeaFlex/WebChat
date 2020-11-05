@@ -17,7 +17,7 @@ let messages = [];
 io.of('/').on('connect', (socket) => {
 
     //The server notify that someone joined the chat.
-    console.log("Someone just connected to the server !");
+    console.log(`The client [${socket.id}] just connected to the server !`);
 
     //All the messages stored in the "database" are sent to the client.
     messages.forEach(message => {
@@ -26,6 +26,7 @@ io.of('/').on('connect', (socket) => {
 
     //When connected, the server greets the newcomer.
     socket.emit("log", {
+        id: 0,
         from: "Server", 
         content: "Welcome !!!",
         date: "a long time ago"
@@ -36,10 +37,15 @@ io.of('/').on('connect', (socket) => {
     //the console server.
     socket.on('new message', (msg) => {
         msg['date'] = `${new Date().toLocaleString('en-GB')}`;
-        console.log(`${msg['from']} said "${msg['content']}" (${msg['date']})`);
+        msg['id'] = socket.id;
+        console.log(`(${msg['date']})(id: ${msg['id']}) ${msg['from']} said "${msg['content']}"`);
         messages.push(msg);
         io.of('/').emit("log", msg);
     });
+
+    socket.on('disconnect', () => {
+        console.log(`The client [${socket.id}] left the chat...`);
+    })
 });
 
 
