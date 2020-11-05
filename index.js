@@ -19,22 +19,24 @@ io.of('/').on('connect', (socket) => {
     //The server notify that someone joined the chat.
     console.log("Someone just connected to the server !");
 
-    //When connected, the server greets the newcomer.
-    socket.emit("log", {
-        from: "Server", 
-        content: "Welcome !!!"
-    });
-
     //All the messages stored in the "database" are sent to the client.
     messages.forEach(message => {
         socket.emit("log", message);
+    });
+
+    //When connected, the server greets the newcomer.
+    socket.emit("log", {
+        from: "Server", 
+        content: "Welcome !!!",
+        date: "a long time ago"
     });
 
     //When a new message comes, it is saved in the "database" and then sent
     //to every client connected at the chat. Plus, everything is logged in
     //the console server.
     socket.on('new message', (msg) => {
-        console.log(`${msg['from']} said "${msg['content']}"`);
+        msg['date'] = `${new Date().toLocaleString('en-GB')}`;
+        console.log(`${msg['from']} said "${msg['content']}" (${msg['date']})`);
         messages.push(msg);
         io.of('/').emit("log", msg);
     });
